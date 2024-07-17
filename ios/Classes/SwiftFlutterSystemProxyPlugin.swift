@@ -16,7 +16,7 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
     
     switch call.method {
     case "getDeviceProxy":
-        log("getDeviceProxy")
+        SwiftFlutterSystemProxyPlugin.log(msg:"getDeviceProxy")
       
         do {
         let args = call.arguments as! NSDictionary
@@ -27,7 +27,7 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
         if(res != nil){
             dict = res as! [String:Any]
         }
-        dict["logs"] = logs
+        dict["logs"] = SwiftFlutterSystemProxyPlugin.logs
              
         result(dict)
         } catch let error {
@@ -41,13 +41,13 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
   }
 
   static func log(msg:String) {
-    logs.append(msg);
+    SwiftFlutterSystemProxyPlugin.logs.append(msg);
   }
   
   static func resolve(url:String)->[String:Any]?{
       
         let proxConfigDict = CFNetworkCopySystemProxySettings()?.takeUnretainedValue() as NSDictionary?
-        log("resolve.proxConfigDict \(proxConfigDict)")
+        SwiftFlutterSystemProxyPlugin.log(msg:"resolve.proxConfigDict \(proxConfigDict)")
 
         if(proxConfigDict != nil){
             if(proxConfigDict!["ProxyAutoConfigEnable"] as? Int == 1){
@@ -75,7 +75,7 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
     }
     
     static func handlePacContent(pacContent: String,url: String){
-        log("handlePacContent \(pacContent), \(url)")
+        SwiftFlutterSystemProxyPlugin.log(msg:"handlePacContent \(pacContent), \(url)")
 
         let proxies = CFNetworkCopyProxiesForAutoConfigurationScript(pacContent as CFString, CFURLCreateWithString(kCFAllocatorDefault, url as CFString, nil), nil)!.takeUnretainedValue() as? [[CFString: Any]] ?? [];
         if(proxies.count > 0){
@@ -92,7 +92,7 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
     }
 
     static func handlePacUrl(pacUrl: String, url: String){
-        log("handlePacUrl \(pacContent), \(url)")
+        SwiftFlutterSystemProxyPlugin.log(msg:"handlePacUrl \(pacUrl), \(url)")
 
         var _pacUrl = CFURLCreateWithString(kCFAllocatorDefault,  pacUrl as CFString?,nil)
         var targetUrl = CFURLCreateWithString(kCFAllocatorDefault, url as CFString?, nil)
