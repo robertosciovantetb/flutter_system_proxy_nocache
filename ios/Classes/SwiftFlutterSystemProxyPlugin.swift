@@ -18,19 +18,12 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
         let args = call.arguments as! NSDictionary
         let url = args.value(forKey:"url") as! String
         var dict:[String:Any] = [:]
-        if(SwiftFlutterSystemProxyPlugin.proxyCache[url] != nil){
-            let res = SwiftFlutterSystemProxyPlugin.proxyCache[url]
-            if(res != nil){
-                dict = res as! [String:Any]
-            }
-        } 
-        else 
-        {
+       
             let res = try SwiftFlutterSystemProxyPlugin.resolve(url: url)
             if(res != nil){
                 dict = res as! [String:Any]
             }
-        }
+        
         result(dict)
         } catch let error {
             print("Unexpected Proxy Error: \(error).")
@@ -43,9 +36,7 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
   }
 
   static func resolve(url:String)->[String:Any]?{
-        if(SwiftFlutterSystemProxyPlugin.proxyCache[url] != nil){
-            return SwiftFlutterSystemProxyPlugin.proxyCache[url]
-        }
+      
         let proxConfigDict = CFNetworkCopySystemProxySettings()?.takeUnretainedValue() as NSDictionary?
         if(proxConfigDict != nil){
             if(proxConfigDict!["ProxyAutoConfigEnable"] as? Int == 1){
