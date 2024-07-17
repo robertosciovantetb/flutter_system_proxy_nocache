@@ -27,7 +27,7 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
         if(res != nil){
             dict = res as! [String:Any]
         }
-        dict['logs'] = logs
+        dict["logs"] = logs
              
         result(dict)
         } catch let error {
